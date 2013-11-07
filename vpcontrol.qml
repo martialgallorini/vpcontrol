@@ -79,11 +79,14 @@ ApplicationWindow {
                       port: "80" }
     }
 
-    ListView {
-        id: listView
+    Column {
         anchors.fill: parent
+
+        Repeater {
+        id: listView
         model: adresses
         delegate: TestWidget{text: address + ":" + port}
+        }
     }
 
 /*

@@ -2,22 +2,20 @@ import QtQuick 2.1
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 
-ToolBar {
+RowLayout {
     id: root
+
+    anchors.left: parent.left
+    anchors.right: parent.right
+
+    spacing: 2
 
     property string text: "default Text"
     property string button1Text: "default"
     property string button2Text: "default"
 
-    Layout.fillWidth: true
-
-    RowLayout {
-        anchors.fill: parent
-        spacing: 2
-
-        TextField {
-            text: root.text
-            Layout.fillWidth: true
-        }
+    TextField {
+        text: root.text
+        Layout.fillWidth: true
     }
 }
