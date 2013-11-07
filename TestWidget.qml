@@ -18,4 +18,12 @@ RowLayout {
         text: root.text
         Layout.fillWidth: true
     }
+
+    Button {
+        text: root.button1Text
+    }
+
+    Button {
+        text: root.button2Text
+    }
 }
