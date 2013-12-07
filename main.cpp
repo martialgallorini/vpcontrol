@@ -1,4 +1,4 @@
-#include "mockprojector.hpp"
+#include "projector.h"
 
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
@@ -7,17 +7,11 @@
 
 int main(int argc, char *argv[])
 {
-    //qmlRegisterType<MockProjector>("net.charlesfleche.vpcontrol", 1, 0, "MockProjector");
+    qmlRegisterType<Projector>("org.vpcontrol.qmlcomponents", 1, 0, "Projector");
 
     QGuiApplication app(argc, argv);
 
-    QList<QObject*> projectors;
-    projectors.append(new MockProjector("http://192.168.0.1:8888"));
-    projectors.append(new MockProjector("http://192.168.0.2:8889"));
-    projectors.append(new MockProjector("http://192.168.0.3:8890"));
-
-    QQmlApplicationEngine engine(QUrl("qrc:/qml/main.qml"));
-    engine.rootContext()->setContextProperty( "projectorsModel", QVariant::fromValue(projectors));
+    QQmlApplicationEngine engine(QUrl("qrc:/main.qml"));
 
     QObject *topLevel = engine.rootObjects().value(0);
     QQuickWindow *window = qobject_cast<QQuickWindow *>(topLevel);

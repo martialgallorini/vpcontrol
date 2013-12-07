@@ -1,6 +1,6 @@
 <RCC>
-  <qresource prefix="/">
-    <file>qml/main.qml</file>
-  </qresource>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>ProjectorView.qml</file>
+    </qresource>
 </RCC>
-

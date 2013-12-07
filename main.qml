@@ -2,7 +2,7 @@ import QtQuick 2.0
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import QtQuick.Window 2.0
-//import net.charlesfleche.vpcontrol 1.0
+import org.vpcontrol.qmlcomponents 1.0
 
 ApplicationWindow {
     id: root
@@ -11,33 +11,14 @@ ApplicationWindow {
     width: 800
     height: 600
 
-/*
-    MockProjector {
-        id: projector
+    Projector {
+        id: projectorModel
+
+        address: projectorView.address
     }
 
-    Text {
-        text: projector.name
-    }
-*/
-
-
-    ListView {
+    ProjectorView {
+        id: projectorView
         anchors.fill: parent
-
-        model: projectorsModel
-        delegate: RowLayout {
-                    Text {
-                        text: name
-                    }
-
-                    Text {
-                        text: manufacturer
-                    }
-
-                    Text {
-                        text: address
-                    }
-                  }
     }
 }
