@@ -20,5 +20,8 @@ ApplicationWindow {
     ProjectorView {
         id: projectorView
         anchors.fill: parent
+
+        connected: projectorModel.connected
+        onConnectionChangeRequested: projectorModel.connected = requestedConnectionState
     }
 }

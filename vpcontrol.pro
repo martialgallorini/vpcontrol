@@ -1,6 +1,8 @@
 TARGET = vpcontrol
 
-QT += qml quick
+QT += qml quick network
+
+QMAKE_CXXFLAGS += -std=c++11
 
 OTHER_FILES += \
     main.qml \
