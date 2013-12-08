@@ -8,6 +8,7 @@ Item {
     property string address
     property bool connected
     property alias power: powerLalel.text
+    property alias projectorName: projectorNameLabel.text
 
     signal queryAll()
     signal setConnect(bool value)
@@ -30,6 +31,10 @@ Item {
 
             onAccepted: root.address = text //console.log(addressControl.text + " " + root.address)
         }
+        Text {
+            id: projectorNameLabel
+        }
+
         Button {
             text: root.connected ? "Disconnect" : "Connect"
 
@@ -46,7 +51,6 @@ Item {
 
                 text: "Power status"
             }
-
             Button {
                 text: "Power ON"
                 onClicked: root.setPower(true)

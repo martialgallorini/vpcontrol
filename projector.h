@@ -32,6 +32,7 @@ public:
     void setConnected(bool);
 
 signals:
+    void nameChanged(QString projectorName);
     void addressChanged(QString);
     void connectedChanged(bool);
     void powerChanged(PowerStatus powerStatus);
@@ -45,6 +46,7 @@ private slots:
 
 private:
     void queryPower();
+    void queryName();
     void sendMessage(const QByteArray&);
 
     QString mAddress;

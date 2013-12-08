@@ -117,6 +117,7 @@ void Projector::setPower(bool power)
 
 void Projector::queryAll()
 {
+    queryName();
     queryPower();
 }
 
@@ -155,11 +156,28 @@ void Projector::readPendingDatagrams()
     {
         qDebug() << "Power error : projector failure";
     }
+    else if (msg == "%1NAME=ERR3\r")
+    {
+        qDebug() << "Name query error : unavailable time";
+    }
+    else if (msg == "%1NAME=ERR4\r")
+    {
+        qDebug() << "Name query error : projector failure";
+    }
+    else if (msg.startsWith("%1NAME="))
+    {
+        emit nameChanged(msg.mid(7, msg.length() - 8));
+    }
 }
 
 void Projector::queryPower()
 {
     sendMessage("%1POWR ?\r");
+}
+
+void Projector::queryName()
+{
+    sendMessage("%1NAME ?\r");
 }
 
 void Projector::sendMessage(const QByteArray& message)

@@ -46,5 +46,10 @@ ApplicationWindow {
                 }
             }
         }
+
+        Connections {
+            target: projectorModel
+            onNameChanged: projectorView.projectorName = projectorName
+        }
     }
 }
