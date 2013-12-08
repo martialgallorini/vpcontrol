@@ -24,6 +24,7 @@ ApplicationWindow {
         connected: projectorModel.connected
         onSetConnect: projectorModel.connected = value
         onSetPower: projectorModel.setPower(value)
+        onSetMute: projectorModel.setMute(value)
 
         onQueryAll: projectorModel.queryAll()
 
@@ -46,6 +47,8 @@ ApplicationWindow {
                 }
             }
 
+            onVideoMuteChanged: videoMute ? projectorView.videoMute = "Video mute ON" : projectorView.videoMute = "Video mute OFF"
+            onAudioMuteChanged: audioMute ? projectorView.audioMute = "Audio mute ON" : projectorView.audioMute = "Audio mute OFF"
             onNameChanged: projectorView.projectorName = projectorName
             onManufacturerChanged: projectorView.projectorManufacturer = manufacturerName
             onModelChanged: projectorView.projectorModel = modelName

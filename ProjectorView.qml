@@ -11,10 +11,13 @@ Item {
     property alias projectorName: projectorNameLabel.text
     property alias projectorManufacturer: projectorManufacturerLabel.text
     property alias projectorModel: projectorModel.text
+    property alias videoMute: videoMuteLalel.text
+    property alias audioMute: audioMuteLalel.text
 
     signal queryAll()
     signal setConnect(bool value)
     signal setPower(bool value)
+    signal setMute(bool value)
 
     onConnectedChanged: console.log("projectorView.connected: " + projectorView.connected)
 
@@ -66,6 +69,25 @@ Item {
             Button {
                 text: "Power OFF"
                 onClicked: root.setPower(false)
+            }
+        }
+
+        RowLayout {
+            Text {
+                id: videoMuteLalel
+                text: "Video mute status"
+            }
+            Text {
+                id: audioMuteLalel
+                text: "Audio mute status"
+            }
+            Button {
+                text: "Mute"
+                onClicked: root.setMute(true)
+            }
+            Button {
+                text: "Unmute"
+                onClicked: root.setMute(false)
             }
         }
     }

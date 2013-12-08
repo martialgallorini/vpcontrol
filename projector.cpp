@@ -115,12 +115,27 @@ void Projector::setPower(bool power)
     sendMessage(msg);
 }
 
+void Projector::setMute(bool mute)
+{
+    QByteArray msg("%1AVMT ");
+    if (mute)
+    {
+        msg += "31";
+    }
+    else
+    {
+        msg += "30";
+    }
+    sendMessage(msg);
+}
+
 void Projector::queryAll()
 {
     queryName();
     queryManufacturer();
     queryModel();
     queryPower();
+    queryMute();
 }
 
 void Projector::readPendingDatagrams()
@@ -195,6 +210,46 @@ void Projector::readPendingDatagrams()
         {
             emit modelChanged(value(msg));
         }
+        else if (msg == "%1AVMT=OK")
+        {
+            emit queryMute();
+        }
+        else if (msg == "%1AVMT=ERR2")
+        {
+            qDebug() << "Set mute error : out of parameter";
+        }
+        else if (msg == "%1AVMT=ERR3")
+        {
+            qDebug() << "Mute error : unavailable time";
+        }
+        else if (msg == "%1AVMT=ERR4")
+        {
+            qDebug() << "Mute error : projector failure";
+        }
+        else if (msg.startsWith("%1AVMT="))
+        {
+            const QByteArray answer(value(msg));
+            if (answer == "11")
+            {
+                emit videoMuteChanged(true);
+                emit audioMuteChanged(false);
+            }
+            if (answer == "21")
+            {
+                emit videoMuteChanged(false);
+                emit audioMuteChanged(true);
+            }
+            if (answer == "31")
+            {
+                emit videoMuteChanged(true);
+                emit audioMuteChanged(true);
+            }
+            if (answer == "30")
+            {
+                emit videoMuteChanged(false);
+                emit audioMuteChanged(false);
+            }
+        }
     }
 }
 
@@ -216,6 +271,11 @@ void Projector::queryManufacturer()
 void Projector::queryModel()
 {
     sendMessage("%1INF2 ?");
+}
+
+void Projector::queryMute()
+{
+    sendMessage("%1AVMT ?");
 }
 
 void Projector::sendMessage(const QByteArray& message)

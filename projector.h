@@ -38,9 +38,12 @@ signals:
     void addressChanged(QString);
     void connectedChanged(bool);
     void powerChanged(PowerStatus powerStatus);
+    void videoMuteChanged(bool videoMute);
+    void audioMuteChanged(bool audioMute);
 
 public slots:
     void setPower(bool);
+    void setMute(bool);
     void queryAll();
 
 private slots:
@@ -51,6 +54,7 @@ private:
     void queryName();
     void queryManufacturer();
     void queryModel();
+    void queryMute();
     void sendMessage(const QByteArray&);
 
     static QByteArray value(const QByteArray&);
