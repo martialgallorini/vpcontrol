@@ -9,12 +9,16 @@ Projector::Projector(QObject *parent) :
 {
     qDebug() << "Projector::Projector()";
 
+    connect(mSocket, &QTcpSocket::readyRead,
+            this, &Projector::readPendingDatagrams);
+
     connect(mSocket,
             &QTcpSocket::connected,
             [&]()
     {
         qDebug() << "Projector" << address() << "connected";
         emit connectedChanged(true);
+        queryAll();
     });
 
     connect(mSocket,
@@ -95,4 +99,77 @@ void Projector::setConnected(bool connect)
 bool Projector::connected() const
 {
     return mSocket->state() == QAbstractSocket::ConnectedState;
+}
+
+void Projector::setPower(bool power)
+{
+    QByteArray msg("%1POWR ");
+    if (power)
+    {
+        msg += "1\r";
+    }
+    else
+    {
+        msg += "0\r";
+    }
+    sendMessage(msg);
+}
+
+void Projector::queryAll()
+{
+    queryPower();
+}
+
+void Projector::readPendingDatagrams()
+{
+    QByteArray msg(mSocket->readAll());
+    if (msg == "%1POWR=OK\r")
+    {
+        queryPower();
+    }
+    else if (msg == "%1POWR=0\r")
+    {
+        emit powerChanged(PowerOff);
+    }
+    else if (msg == "%1POWR=1\r")
+    {
+        emit powerChanged(PowerOn);
+    }
+    else if (msg == "%1POWR=2\r")
+    {
+        emit powerChanged(PowerCooling);
+    }
+    else if (msg == "%1POWR=3\r")
+    {
+        emit powerChanged(PowerWarmUp);
+    }
+    else if (msg == "%1POWR=ERR2\r")
+    {
+        qDebug() << "Set power error : out of parameter";
+    }
+    else if (msg == "%1POWR=ERR3\r")
+    {
+        qDebug() << "Power error : unavailable time";
+    }
+    else if (msg == "%1POWR=ERR4\r")
+    {
+        qDebug() << "Power error : projector failure";
+    }
+}
+
+void Projector::queryPower()
+{
+    sendMessage("%1POWR ?\r");
+}
+
+void Projector::sendMessage(const QByteArray& message)
+{
+    Q_ASSERT(mSocket->isValid());
+    Q_ASSERT(connected());
+    Q_ASSERT(mSocket->isWritable());
+
+    if(mSocket->write(message) == -1)
+    {
+        qDebug() << "Error while sending message";
+    }
 }

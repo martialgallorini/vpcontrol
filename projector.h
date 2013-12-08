@@ -8,7 +8,17 @@ class QTcpSocket;
 class Projector : public QObject
 {
     Q_OBJECT
+
 public:
+    enum PowerStatus
+    {
+        PowerOff,
+        PowerWarmUp,
+        PowerOn,
+        PowerCooling
+    };
+    Q_ENUMS(PowerStatus)
+
     Q_PROPERTY(QString address READ address WRITE setAddress NOTIFY addressChanged)
     Q_PROPERTY(bool connected READ connected WRITE setConnected NOTIFY connectedChanged)
 
@@ -24,10 +34,19 @@ public:
 signals:
     void addressChanged(QString);
     void connectedChanged(bool);
+    void powerChanged(PowerStatus powerStatus);
 
 public slots:
+    void setPower(bool);
+    void queryAll();
+
+private slots:
+    void readPendingDatagrams();
 
 private:
+    void queryPower();
+    void sendMessage(const QByteArray&);
+
     QString mAddress;
     QTcpSocket* mSocket;
 };

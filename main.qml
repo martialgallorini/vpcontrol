@@ -22,6 +22,29 @@ ApplicationWindow {
         anchors.fill: parent
 
         connected: projectorModel.connected
-        onConnectionChangeRequested: projectorModel.connected = requestedConnectionState
+        onSetConnect: projectorModel.connected = value
+        onSetPower: projectorModel.setPower(value)
+
+        onQueryAll: projectorModel.queryAll()
+
+        Connections {
+            target: projectorModel
+            onPowerChanged: {
+                switch (powerStatus) {
+                case 0:
+                    projectorView.power = "Off";
+                    break;
+                case 1:
+                    projectorView.power = "Warm up"
+                    break;
+                case 2:
+                    projectorView.power = "On"
+                    break;
+                case 3:
+                    projectorView.power = "Cooling"
+                    break;
+                }
+            }
+        }
     }
 }

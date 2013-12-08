@@ -7,8 +7,11 @@ Item {
 
     property string address
     property bool connected
+    property alias power: powerLalel.text
 
-    signal connectionChangeRequested(bool requestedConnectionState)
+    signal queryAll()
+    signal setConnect(bool value)
+    signal setPower(bool value)
 
     onConnectedChanged: console.log("projectorView.connected: " + projectorView.connected)
 
@@ -23,14 +26,35 @@ Item {
         TextInput {
             id: addressControl
 
-            text: "Default"
+            text: "192.168.0.9"
 
             onAccepted: root.address = text //console.log(addressControl.text + " " + root.address)
         }
         Button {
             text: root.connected ? "Disconnect" : "Connect"
 
-            onClicked: root.connectionChangeRequested(!connected)
+            onClicked: root.setConnect(!connected)
+        }
+        Button {
+            text: "Query all"
+            onClicked: root.queryAll()
+        }
+
+        RowLayout {
+            Text {
+                id: powerLalel
+
+                text: "Power status"
+            }
+
+            Button {
+                text: "Power ON"
+                onClicked: root.setPower(true)
+            }
+            Button {
+                text: "Power OFF"
+                onClicked: root.setPower(false)
+            }
         }
     }
 }
