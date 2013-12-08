@@ -106,11 +106,11 @@ void Projector::setPower(bool power)
     QByteArray msg("%1POWR ");
     if (power)
     {
-        msg += "1\r";
+        msg += "1";
     }
     else
     {
-        msg += "0\r";
+        msg += "0";
     }
     sendMessage(msg);
 }
@@ -118,66 +118,86 @@ void Projector::setPower(bool power)
 void Projector::queryAll()
 {
     queryName();
+    queryManufacturer();
     queryPower();
 }
 
 void Projector::readPendingDatagrams()
 {
-    QByteArray msg(mSocket->readAll());
-    if (msg == "%1POWR=OK\r")
+    foreach(const QByteArray& msg, mSocket->readAll().split('\r'))
     {
-        queryPower();
-    }
-    else if (msg == "%1POWR=0\r")
-    {
-        emit powerChanged(PowerOff);
-    }
-    else if (msg == "%1POWR=1\r")
-    {
-        emit powerChanged(PowerOn);
-    }
-    else if (msg == "%1POWR=2\r")
-    {
-        emit powerChanged(PowerCooling);
-    }
-    else if (msg == "%1POWR=3\r")
-    {
-        emit powerChanged(PowerWarmUp);
-    }
-    else if (msg == "%1POWR=ERR2\r")
-    {
-        qDebug() << "Set power error : out of parameter";
-    }
-    else if (msg == "%1POWR=ERR3\r")
-    {
-        qDebug() << "Power error : unavailable time";
-    }
-    else if (msg == "%1POWR=ERR4\r")
-    {
-        qDebug() << "Power error : projector failure";
-    }
-    else if (msg == "%1NAME=ERR3\r")
-    {
-        qDebug() << "Name query error : unavailable time";
-    }
-    else if (msg == "%1NAME=ERR4\r")
-    {
-        qDebug() << "Name query error : projector failure";
-    }
-    else if (msg.startsWith("%1NAME="))
-    {
-        emit nameChanged(msg.mid(7, msg.length() - 8));
+        if (msg == "%1POWR=OK")
+        {
+            queryPower();
+        }
+        else if (msg == "%1POWR=0")
+        {
+            emit powerChanged(PowerOff);
+        }
+        else if (msg == "%1POWR=1")
+        {
+            emit powerChanged(PowerOn);
+        }
+        else if (msg == "%1POWR=2")
+        {
+            emit powerChanged(PowerCooling);
+        }
+        else if (msg == "%1POWR=3")
+        {
+            emit powerChanged(PowerWarmUp);
+        }
+        else if (msg == "%1POWR=ERR2")
+        {
+            qDebug() << "Set power error : out of parameter";
+        }
+        else if (msg == "%1POWR=ERR3")
+        {
+            qDebug() << "Power error : unavailable time";
+        }
+        else if (msg == "%1POWR=ERR4")
+        {
+            qDebug() << "Power error : projector failure";
+        }
+        else if (msg == "%1NAME=ERR3")
+        {
+            qDebug() << "Name query error : unavailable time";
+        }
+        else if (msg == "%1NAME=ERR4")
+        {
+            qDebug() << "Name query error : projector failure";
+        }
+        else if (msg.startsWith("%1NAME="))
+        {
+            emit nameChanged(value(msg));
+        }
+        else if (msg == "%1INF1=ERR3")
+        {
+            qDebug() << "Manufacturer query error : unavailable time";
+        }
+        else if (msg == "%1INF1=ERR4")
+        {
+            qDebug() << "Manufacturer query error : projector failure";
+        }
+        else if (msg.startsWith("%1INF1="))
+        {
+            emit manufacturerChanged(value(msg));
+        }
     }
 }
 
 void Projector::queryPower()
 {
-    sendMessage("%1POWR ?\r");
+    sendMessage("%1POWR ?");
 }
 
 void Projector::queryName()
 {
-    sendMessage("%1NAME ?\r");
+    sendMessage("%1NAME ?");
+}
+
+void Projector::queryManufacturer()
+{
+    sendMessage("%1INF1 ?");
 }
 
 void Projector::sendMessage(const QByteArray& message)
@@ -185,9 +205,15 @@ void Projector::sendMessage(const QByteArray& message)
     Q_ASSERT(mSocket->isValid());
     Q_ASSERT(connected());
     Q_ASSERT(mSocket->isWritable());
+    Q_ASSERT(!message.endsWith("\r"));
 
-    if(mSocket->write(message) == -1)
+    if(mSocket->write(message + "\r") == -1)
     {
         qDebug() << "Error while sending message";
     }
+}
+
+QByteArray Projector::value(const QByteArray& message)
+{
+    return message.mid(7);
 }

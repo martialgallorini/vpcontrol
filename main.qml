@@ -45,11 +45,9 @@ ApplicationWindow {
                     break;
                 }
             }
-        }
 
-        Connections {
-            target: projectorModel
             onNameChanged: projectorView.projectorName = projectorName
+            onManufacturerChanged: projectorView.projectorManufacturer = manufacturerName
         }
     }
 }
