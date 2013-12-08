@@ -34,6 +34,7 @@ public:
 signals:
     void nameChanged(QString projectorName);
     void manufacturerChanged(QString manufacturerName);
+    void modelChanged(QString modelName);
     void addressChanged(QString);
     void connectedChanged(bool);
     void powerChanged(PowerStatus powerStatus);
@@ -49,6 +50,7 @@ private:
     void queryPower();
     void queryName();
     void queryManufacturer();
+    void queryModel();
     void sendMessage(const QByteArray&);
 
     static QByteArray value(const QByteArray&);

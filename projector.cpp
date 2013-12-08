@@ -119,6 +119,7 @@ void Projector::queryAll()
 {
     queryName();
     queryManufacturer();
+    queryModel();
     queryPower();
 }
 
@@ -182,6 +183,18 @@ void Projector::readPendingDatagrams()
         {
             emit manufacturerChanged(value(msg));
         }
+        else if (msg == "%1INF2=ERR3")
+        {
+            qDebug() << "Projector model query error : unavailable time";
+        }
+        else if (msg == "%1INF2=ERR4")
+        {
+            qDebug() << "Projector model query error : projector failure";
+        }
+        else if (msg.startsWith("%1INF2="))
+        {
+            emit modelChanged(value(msg));
+        }
     }
 }
 
@@ -198,6 +211,11 @@ void Projector::queryName()
 void Projector::queryManufacturer()
 {
     sendMessage("%1INF1 ?");
+}
+
+void Projector::queryModel()
+{
+    sendMessage("%1INF2 ?");
 }
 
 void Projector::sendMessage(const QByteArray& message)

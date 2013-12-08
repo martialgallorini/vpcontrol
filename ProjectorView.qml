@@ -10,6 +10,7 @@ Item {
     property alias power: powerLalel.text
     property alias projectorName: projectorNameLabel.text
     property alias projectorManufacturer: projectorManufacturerLabel.text
+    property alias projectorModel: projectorModel.text
 
     signal queryAll()
     signal setConnect(bool value)
@@ -37,6 +38,9 @@ Item {
         }
         Text {
             id: projectorManufacturerLabel
+        }
+        Text {
+            id: projectorModel
         }
 
         Button {

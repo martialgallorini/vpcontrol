@@ -48,6 +48,7 @@ ApplicationWindow {
 
             onNameChanged: projectorView.projectorName = projectorName
             onManufacturerChanged: projectorView.projectorManufacturer = manufacturerName
+            onModelChanged: projectorView.projectorModel = modelName
         }
     }
 }
