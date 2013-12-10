@@ -7,12 +7,14 @@ Item {
 
     property string address
     property bool connected
+    /*
     property alias power: powerLalel.text
     property alias projectorName: projectorNameLabel.text
     property alias projectorManufacturer: projectorManufacturerLabel.text
     property alias projectorModel: projectorModel.text
     property alias videoMute: videoMuteLalel.text
     property alias audioMute: audioMuteLalel.text
+    */
 
     signal queryAll()
     signal setConnect(bool value)
@@ -23,71 +25,146 @@ Item {
 
     Rectangle {
         anchors.fill: root
-        color: "aliceblue"
-        border.color: "aquamarine"
-        radius: 10
+        color: "darkgrey"
     }
 
-    ColumnLayout {
-        TextInput {
-            id: addressControl
+    RowLayout {
+        id: widgetRow
 
-            text: "192.168.0.9"
+        anchors.fill: parent
 
-            onAccepted: root.address = text //console.log(addressControl.text + " " + root.address)
-        }
-        Text {
-            id: projectorNameLabel
-        }
-        Text {
-            id: projectorManufacturerLabel
-        }
-        Text {
-            id: projectorModel
+        Rectangle {
+            anchors.fill: parent
+            color: "transparent"
+            border.color: "magenta"
+            radius: 5
         }
 
-        Button {
-            text: root.connected ? "Disconnect" : "Connect"
+        Item {
+            Layout.fillHeight: true
+            Layout.fillWidth: true
 
-            onClicked: root.setConnect(!connected)
-        }
-        Button {
-            text: "Query all"
-            onClicked: root.queryAll()
-        }
-
-        RowLayout {
-            Text {
-                id: powerLalel
-
-                text: "Power status"
+            Rectangle {
+                anchors.fill: parent
+                color: "lightgrey"
+                radius: 15
             }
-            Button {
-                text: "Power ON"
-                onClicked: root.setPower(true)
-            }
-            Button {
-                text: "Power OFF"
-                onClicked: root.setPower(false)
+
+            RowLayout {
+                anchors.centerIn: parent
+
+                TextInput {
+                    id: addressControl
+                    text: "192.168.0.9"
+                    onAccepted: root.address = text //console.log(addressControl.text + " " + root.address)
+                }
+
+                ColumnLayout {
+                    //Layout.fillHeight: true
+
+                    Button {
+                        text: root.connected ? "Disconnect" : "Connect"
+                        onClicked: root.setConnect(!connected)
+                    }
+                    Button {
+                        text: "Refresh"
+                        onClicked: root.queryAll()
+                    }
+                }
             }
         }
 
-        RowLayout {
-            Text {
-                id: videoMuteLalel
-                text: "Video mute status"
+        Item {
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+
+            Rectangle {
+                anchors.fill: parent
+                color: "lightgrey"
+                radius: 15
             }
-            Text {
-                id: audioMuteLalel
-                text: "Audio mute status"
+
+            ColumnLayout {
+                anchors.fill: parent
+
+                Text {
+                    id: projectorNameLabel
+                    text: "Name"
+                }
+                Text {
+                    id: projectorManufacturerLabel
+                    text: "Manufacturer"
+                }
+                Text {
+                    id: projectorModel
+                    text: "Model"
+                }
             }
-            Button {
-                text: "Mute"
-                onClicked: root.setMute(true)
+        }
+
+        Item {
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+
+            Rectangle {
+                anchors.fill: parent
+                color: "lightgrey"
+                radius: 15
             }
-            Button {
-                text: "Unmute"
-                onClicked: root.setMute(false)
+
+            RowLayout {
+                anchors.fill: parent
+
+                Text {
+                    id: powerLalel
+                    text: "Power status"
+                }
+                ColumnLayout {
+                    Button {
+                        text: "Power ON"
+                        onClicked: root.setPower(true)
+                    }
+                    Button {
+                        text: "Power OFF"
+                        onClicked: root.setPower(false)
+                    }
+                }
+            }
+        }
+
+        Item {
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+
+            Rectangle {
+                anchors.fill: parent
+                color: "lightgrey"
+                radius: 15
+            }
+
+            RowLayout {
+                anchors.fill: parent
+
+                ColumnLayout {
+                    Text {
+                        id: videoMuteLalel
+                        text: "Video mute status"
+                    }
+                    Text {
+                        id: audioMuteLalel
+                        text: "Audio mute status"
+                    }
+                }
+                ColumnLayout {
+                    Button {
+                        text: "Mute"
+                        onClicked: root.setMute(true)
+                    }
+                    Button {
+                        text: "Unmute"
+                        onClicked: root.setMute(false)
+                    }
+                }
             }
         }
     }

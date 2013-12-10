@@ -8,8 +8,10 @@ ApplicationWindow {
     id: root
     title: "vpcontrol"
 
-    width: 800
+    width: 1024
     height: 600
+
+    color: "orange"
 
     Projector {
         id: projectorModel
@@ -19,7 +21,8 @@ ApplicationWindow {
 
     ProjectorView {
         id: projectorView
-        anchors.fill: parent
+        width: parent.width
+        height: 128
 
         connected: projectorModel.connected
         onSetConnect: projectorModel.connected = value
