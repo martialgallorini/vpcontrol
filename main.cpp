@@ -10,6 +10,8 @@ int main(int argc, char *argv[])
     qmlRegisterType<Projector>("org.vpcontrol.qmlcomponents", 1, 0, "Projector");
 
     QGuiApplication app(argc, argv);
+    app.setOrganizationName("vpcontrol");
+    app.setApplicationName("vpcontrol");
 
     QQmlApplicationEngine engine(QUrl("qrc:/main.qml"));
 
