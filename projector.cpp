@@ -2,6 +2,7 @@
 
 #include <QtDebug>
 #include <QTcpSocket>
+#include <QVariantMap>
 
 Projector::Projector(QObject *parent) :
     QObject(parent),
@@ -129,6 +130,19 @@ void Projector::setMute(bool mute)
     sendMessage(msg);
 }
 
+void Projector::setInputSource(int index)
+{
+    if (index < 0 || index >= inputSourcesValues.count())
+    {
+        qWarning() << "Projector::setInputSource: out of range index";
+        return;
+    }
+    Q_ASSERT(index < inputSourcesValues.count());
+    QByteArray msg("%1INPT ");
+    msg += inputSourcesValues[index];
+    sendMessage(msg);
+}
+
 void Projector::queryAll()
 {
     queryName();
@@ -136,6 +150,8 @@ void Projector::queryAll()
     queryModel();
     queryPower();
     queryMute();
+    queryInputs();
+    queryInput();
 }
 
 void Projector::readPendingDatagrams()
@@ -250,7 +266,80 @@ void Projector::readPendingDatagrams()
                 emit audioMuteChanged(false);
             }
         }
+        else if (msg == "%1INST=ERR3")
+        {
+            qDebug() << "Input query error : unavailable time";
+        }
+        else if (msg == "%1INST=ERR4")
+        {
+            qDebug() << "Input query error : projector failure";
+        }
+        else if (msg.startsWith("%1INST="))
+        {
+            inputSourcesValues = value(msg).split(' ');
+            qDebug() << inputSourcesValues << inputSourcesAsStrings();
+            emit inputSourcesChanged(inputSourcesAsStrings());
+        }
+        else if (msg == "%1INPT=OK")
+        {
+            queryInput();
+        }
+        else if (msg == "%1INPT=ERR1")
+        {
+            qDebug() << "Input switch error : ERR1";
+        }
+        else if (msg == "%1INPT=ERR2")
+        {
+            qDebug() << "Input switch error : non-existent input source";
+        }
+        else if (msg == "%1INPT=ERR3")
+        {
+            qDebug() << "Input switch error : unavailable time";
+        }
+        else if (msg == "%1INPT=ERR4")
+        {
+            qDebug() << "Input switch error : projector failure";
+        }
+        else if (msg.startsWith("%1INPT="))
+        {
+            emit inputSourceChanged(inputSourcesValues.indexOf(value(msg)));
+        }
     }
+}
+
+QStringList Projector::inputSourcesAsStrings() const
+{
+    QStringList ret;
+
+    foreach (const QByteArray& inputBytes, inputSourcesValues)
+    {
+        Q_ASSERT(inputBytes.count() == 2);
+
+        QString source;
+        switch(QByteArray(1, inputBytes[0]).toInt())
+        {
+        case 1:
+            source += "RGBA";
+            break;
+        case 2:
+            source += "Video";
+            break;
+        case 3:
+            source += "Digital";
+            break;
+        case 4:
+            source += "Storage";
+            break;
+        case 5:
+            source += "Network";
+            break;
+        }
+        source += " ";
+        source += inputBytes[1];
+        //const int index = QByteArray(1, inputBytes[1]).toInt();
+        ret.append(source);
+    }
+    return ret;
 }
 
 void Projector::queryPower()
@@ -276,6 +365,16 @@ void Projector::queryModel()
 void Projector::queryMute()
 {
     sendMessage("%1AVMT ?");
+}
+
+void Projector::queryInputs()
+{
+    sendMessage("%1INST ?");
+}
+
+void Projector::queryInput()
+{
+    sendMessage("%1INPT ?");
 }
 
 void Projector::sendMessage(const QByteArray& message)

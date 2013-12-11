@@ -2,6 +2,7 @@
 #define PROJECTOR_H
 
 #include <QObject>
+#include <QStringList>
 
 class QTcpSocket;
 
@@ -22,7 +23,7 @@ public:
     Q_PROPERTY(QString address READ address WRITE setAddress NOTIFY addressChanged)
     Q_PROPERTY(bool connected READ connected WRITE setConnected NOTIFY connectedChanged)
 
-    explicit Projector(QObject *parent = 0);
+    explicit Projector(QObject* parent = 0);
     ~Projector();
 
     QString address() const;
@@ -40,10 +41,13 @@ signals:
     void powerChanged(PowerStatus powerStatus);
     void videoMuteChanged(bool videoMute);
     void audioMuteChanged(bool audioMute);
+    void inputSourcesChanged(QStringList inputSources);
+    void inputSourceChanged(int inputSource);
 
 public slots:
     void setPower(bool);
     void setMute(bool);
+    void setInputSource(int);
     void queryAll();
 
 private slots:
@@ -55,12 +59,16 @@ private:
     void queryManufacturer();
     void queryModel();
     void queryMute();
+    void queryInputs();
+    void queryInput();
     void sendMessage(const QByteArray&);
+    QStringList inputSourcesAsStrings() const;
 
     static QByteArray value(const QByteArray&);
 
     QString mAddress;
     QTcpSocket* mSocket;
+    QList<QByteArray> inputSourcesValues;
 };
 
 #endif // PROJECTOR_H

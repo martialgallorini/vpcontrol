@@ -8,7 +8,7 @@ ApplicationWindow {
     id: root
     title: "vpcontrol"
 
-    width: 1024
+    width: 1600
     height: 600
 
     color: "orange"
@@ -28,6 +28,7 @@ ApplicationWindow {
         onSetConnect: projectorModel.connected = value
         onSetPower: projectorModel.setPower(value)
         onSetMute: projectorModel.setMute(value)
+        onInputSourceChanged: projectorModel.setInputSource(projectorView.inputSource)
 
         onQueryAll: projectorModel.queryAll()
 
@@ -55,6 +56,8 @@ ApplicationWindow {
             onNameChanged: projectorView.projectorName = projectorName
             onManufacturerChanged: projectorView.projectorManufacturer = manufacturerName
             onModelChanged: projectorView.projectorModel = modelName
+            onInputSourcesChanged: projectorView.inputSources = inputSources
+            onInputSourceChanged: projectorView.inputSource = inputSource
         }
     }
 }

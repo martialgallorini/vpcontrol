@@ -7,19 +7,21 @@ Item {
 
     property string address
     property bool connected
-    /*
+
     property alias power: powerLalel.text
     property alias projectorName: projectorNameLabel.text
     property alias projectorManufacturer: projectorManufacturerLabel.text
     property alias projectorModel: projectorModel.text
     property alias videoMute: videoMuteLalel.text
     property alias audioMute: audioMuteLalel.text
-    */
+    property alias inputSources: inputSourcesComboBox.model
+    property alias inputSource: inputSourcesComboBox.currentIndex
 
     signal queryAll()
     signal setConnect(bool value)
     signal setPower(bool value)
     signal setMute(bool value)
+    signal setInput(int value)
 
     onConnectedChanged: console.log("projectorView.connected: " + projectorView.connected)
 
@@ -128,6 +130,30 @@ Item {
                         text: "Power OFF"
                         onClicked: root.setPower(false)
                     }
+                }
+            }
+        }
+
+        Item {
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+
+            Rectangle {
+                anchors.fill: parent
+                color: "lightgrey"
+                radius: 15
+            }
+
+            RowLayout {
+                anchors.fill: parent
+
+                Text {
+                    text: "Input"
+                }
+
+                ComboBox {
+                    id: inputSourcesComboBox
+                    anchors.centerIn: parent
                 }
             }
         }
