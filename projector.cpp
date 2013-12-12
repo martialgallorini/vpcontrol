@@ -4,10 +4,12 @@
 #include <QTcpSocket>
 #include <QVariantMap>
 
+
 Projector::Projector(QObject *parent) :
     QObject(parent),
     mSocket(new QTcpSocket(this))
 {
+
     qDebug() << "Projector::Projector()";
 
     connect(mSocket, &QTcpSocket::readyRead,
@@ -29,7 +31,8 @@ Projector::Projector(QObject *parent) :
         qDebug() << "Projector" << address() << "disconnected";
         emit connectedChanged(false);
     });
-/*
+/* XXX
+ * Breaks compilation
     connect(mSocket,
             SIGNAL(error(QAbstractSocket::SocketError)),
             [&](QAbstractSocket::SocketError error)
@@ -44,12 +47,15 @@ Projector::Projector(QObject *parent) :
         qDebug() << "Projector" << address() << "hostFound";
     });
 
+/* XXX
+ * Breaks compilation
     connect(mSocket,
             &QTcpSocket::proxyAuthenticationRequired,
             [&]()
     {
         qDebug() << "Projector" << address() << "proxyAuthenticationRequired";
     });
+*/
 
     connect(mSocket,
             &QTcpSocket::stateChanged,
@@ -57,6 +63,7 @@ Projector::Projector(QObject *parent) :
     {
         qDebug() << "Projector" << address() << "stateChanged" << socketState;
     });
+
 }
 
 Projector::~Projector()
@@ -114,6 +121,19 @@ void Projector::setPower(bool power)
         msg += "0";
     }
     sendMessage(msg);
+}
+
+void Projector::sendMessage(const QByteArray& message)
+{
+    Q_ASSERT(mSocket->isValid());
+    Q_ASSERT(connected());
+    Q_ASSERT(mSocket->isWritable());
+    Q_ASSERT(!message.endsWith("\r"));
+
+    if(mSocket->write(message + "\r") == -1)
+    {
+        qDebug() << "Error while sending message";
+    }
 }
 
 void Projector::setMute(bool mute)
@@ -377,20 +397,9 @@ void Projector::queryInput()
     sendMessage("%1INPT ?");
 }
 
-void Projector::sendMessage(const QByteArray& message)
-{
-    Q_ASSERT(mSocket->isValid());
-    Q_ASSERT(connected());
-    Q_ASSERT(mSocket->isWritable());
-    Q_ASSERT(!message.endsWith("\r"));
-
-    if(mSocket->write(message + "\r") == -1)
-    {
-        qDebug() << "Error while sending message";
-    }
-}
-
 QByteArray Projector::value(const QByteArray& message)
 {
     return message.mid(7);
 }
+
+

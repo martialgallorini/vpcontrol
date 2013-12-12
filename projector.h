@@ -28,16 +28,17 @@ public:
 
     QString address() const;
     void setAddress(const QString&);
-
     bool connected() const;
     void setConnected(bool);
 
 signals:
+    void addressChanged(QString);
+    void connectedChanged(bool);
+
+
     void nameChanged(QString projectorName);
     void manufacturerChanged(QString manufacturerName);
     void modelChanged(QString modelName);
-    void addressChanged(QString);
-    void connectedChanged(bool);
     void powerChanged(PowerStatus powerStatus);
     void videoMuteChanged(bool videoMute);
     void audioMuteChanged(bool audioMute);
@@ -48,12 +49,15 @@ public slots:
     void setPower(bool);
     void setMute(bool);
     void setInputSource(int);
+
     void queryAll();
 
 private slots:
     void readPendingDatagrams();
 
 private:
+    void sendMessage(const QByteArray&);
+
     void queryPower();
     void queryName();
     void queryManufacturer();
@@ -61,11 +65,13 @@ private:
     void queryMute();
     void queryInputs();
     void queryInput();
-    void sendMessage(const QByteArray&);
+
     QStringList inputSourcesAsStrings() const;
 
     static QByteArray value(const QByteArray&);
 
+
+private:
     QString mAddress;
     QTcpSocket* mSocket;
     QList<QByteArray> inputSourcesValues;
