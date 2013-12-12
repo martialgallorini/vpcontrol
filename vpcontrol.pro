@@ -1,12 +1,11 @@
 TARGET = vpcontrol
 
-QT += qml quick network
+QT += core qml quick network
 
-QMAKE_CXXFLAGS += -std=c++11
+CONFIG += c++11
 
 OTHER_FILES += \
     main.qml \
-    TestWidget.qml \
     ProjectorView.qml
 
 RESOURCES += \
@@ -14,10 +13,7 @@ RESOURCES += \
 
 SOURCES += \
     main.cpp \
-    mockprojector.cpp \
     projector.cpp
 
 HEADERS += \
-    mockprojector.hpp \
     projector.h
-
