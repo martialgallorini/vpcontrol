@@ -1,6 +1,6 @@
-import QtQuick 2.0
-import QtQuick.Controls 1.0
-import QtQuick.Layouts 1.0
+import QtQuick 2.2
+import QtQuick.Controls 1.1
+import QtQuick.Layouts 1.1
 import QtQuick.Window 2.0
 import org.vpcontrol.qmlcomponents 1.0
 
@@ -11,7 +11,7 @@ ApplicationWindow {
     width: 1600
     height: 600
 
-    color: "orange"
+    color: "ivory"
 
     Projector {
         id: projectorModel
@@ -21,8 +21,8 @@ ApplicationWindow {
 
     ProjectorView {
         id: projectorView
-        width: parent.width
-        height: 128
+
+        anchors.centerIn: parent
 
         connected: projectorModel.connected
         onSetConnect: projectorModel.connected = value

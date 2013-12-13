@@ -6,7 +6,10 @@ CONFIG += c++11
 
 OTHER_FILES += \
     main.qml \
-    ProjectorView.qml
+    ProjectorView.qml \
+    PowerButton.qml \
+    MuteButton.qml \
+    StatusButton.qml
 
 RESOURCES += \
     resources.qrc

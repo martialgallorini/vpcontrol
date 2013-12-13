@@ -1,7 +1,87 @@
-import QtQuick 2.0
-import QtQuick.Controls 1.0
-import QtQuick.Layouts 1.0
+import QtQuick 2.2
+import QtQuick.Controls 1.1
+import QtQuick.Layouts 1.1
 
+Rectangle {
+    id: root
+
+    property string address
+    property bool connected
+
+    property int power
+    property alias projectorName: nameText.text
+    property string projectorManufacturer
+    property string projectorModel
+    property bool videoMute
+    property bool audioMute
+    property bool mute: videoMute || audioMute
+    property variant inputSources
+    property int inputSource
+
+    signal queryAll()
+    signal setConnect(bool value)
+    signal setPower(bool value)
+    signal setMute(bool value)
+    signal setInput(int value)
+
+    width: 256
+    height: .5 * width
+
+    color: "transparent"
+    border.color: "black"
+    radius: 10
+
+    ColumnLayout {
+        anchors.fill: parent
+        anchors.margins: spacing * 2
+
+        TextInput {
+            id: addressTextInput
+            Layout.fillWidth: true
+            text: "xxx.xxx.xxx.xxx"
+            visible: !nameText.visible
+        }
+        Text {
+            id: nameText
+            Layout.fillWidth: true
+            text: ""
+            visible: text.length > 0
+        }
+        Text {
+            id: sourceText
+            Layout.fillWidth: true
+            text: "Source"
+        }
+
+        Item {
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+
+            property int iconSize: (Math.min(width, height * 3) - 2 * parent.spacing) / 3
+
+            PowerButton {
+                anchors.left: parent.left
+                anchors.bottom: parent.bottom
+                width: parent.iconSize
+                height: parent.iconSize
+            }
+            MuteButton {
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.bottom: parent.bottom
+                width: parent.iconSize
+                height: parent.iconSize
+            }
+            StatusButton {
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                width: parent.iconSize
+                height: parent.iconSize
+            }
+        }
+    }
+}
+
+/*
 Item {
     id: root
 
@@ -195,3 +275,4 @@ Item {
         }
     }
 }
+*/

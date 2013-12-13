@@ -2,5 +2,8 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>ProjectorView.qml</file>
+        <file>PowerButton.qml</file>
+        <file>MuteButton.qml</file>
+        <file>StatusButton.qml</file>
     </qresource>
 </RCC>
